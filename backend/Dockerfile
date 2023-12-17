@@ -18,9 +18,5 @@ RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev && \
 # Copy project
 COPY . /app/backend/
 
-# run migrations
-RUN python manage.py makemigrations
-RUN python manage.py migrate
-
 # Run the app
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
