@@ -24,7 +24,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Welcome to Jack's E-Commerce Store!
+          Welcome to Jack's Minimart!
         </p>
       </header>
       <div className="product-list">
