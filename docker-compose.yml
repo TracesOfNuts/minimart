@@ -3,13 +3,14 @@ version: '3.8'
 services:
   db:
     image: postgres:16-alpine
+    restart: always
     container_name: postgres
     environment:
-      POSTGRES_DB: postgres
+      POSTGRES_DB: products
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     volumes:
-      - ./data/db:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
@@ -40,3 +41,7 @@ services:
       - "3000:3000"
     depends_on:
       - backend
+
+volumes:
+  postgres_data:
+    driver: local
