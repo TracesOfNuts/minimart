@@ -87,7 +87,8 @@ function AdminLandingPage() {
           sx={{ 
             height:550,
             position:'relative', 
-            my: 10, 
+            mt: 10, 
+            mb:6,
             backgroundImage: `url(${banner})`, 
             backgroundSize: 'cover',
             backgroundPosition: 'center',
@@ -95,13 +96,13 @@ function AdminLandingPage() {
           }}
         >
         </Paper>
-        <Button variant="contained" onClick={handleOpen}>
+        <Button variant="contained" onClick={handleOpen} sx={{mb:4}}>
           Add Product
         </Button>
         <Grid container spacing={4}>
           {products.map((product) => (
             <Grid item key={product.id} xs={12} sm={6} md={4}>
-              <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+              <Card elevation={3} sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
                 <CardActionArea component={Link} to={`/admin/products/${product.id}`}>
                   <CardMedia
                     component="div"
@@ -109,7 +110,7 @@ function AdminLandingPage() {
                       // 16:9
                       pt: "56.25%",
                     }}
-                    image={product.image}
+                    image='https://source.unsplash.com/random?fruit,vegetable'
                   />
                   <CardContent sx={{ flexGrow: 1 }}>
                     <Typography gutterBottom variant="h5" component="h2">
