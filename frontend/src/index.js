@@ -7,11 +7,11 @@ import AdminProductPage from './AdminProductPage';
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: '/admin/products',
     element: <AdminLandingPage />,
   },
   {
-    path: '/products/:id',
+    path: '/admin/products/:id',
     element: <AdminProductPage />,
   },
 ]);
