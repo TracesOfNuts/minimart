@@ -1,5 +1,17 @@
 import * as React from "react";
-import { Container, CssBaseline, Paper } from "@mui/material";
+import { 
+  Button,
+  Card, 
+  CardActionArea, 
+  CardActions, 
+  CardContent, 
+  CardMedia, 
+  Container, 
+  CssBaseline, 
+  Grid, 
+  Paper, 
+  Typography 
+  } from "@mui/material";
 import AppAppBar from "./components/AppAppBar";
 import banner from './banner.jpg';
 
@@ -30,29 +42,43 @@ function App() {
           sx={{ 
             height:550,
             position:'relative', 
-            marginTop: 10, 
+            my: 10, 
             backgroundImage: `url(${banner})`, 
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat', 
           }}
         >
-          {/* {<img style={{ display: 'none'}} src={banner} alt="banner" />} */}
         </Paper>
-
-
-
-        <div className="App">
-          <div className="product-list">
-            {products.map((product) => (
-              <div className="product" key={product.id}>
-                <h3>{product.name}</h3>
-                <p>{product.description}</p>
-                <p>Price: ${product.price}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+        <Grid container spacing={4}>
+          {products.map((product) => (
+            <Grid item key={product.id} xs={12} sm={6} md={4}>
+              <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+                <CardActionArea>
+                  <CardMedia
+                    component="div"
+                    sx={{
+                      // 16:9
+                      pt: "56.25%",
+                    }}
+                    image={product.image}
+                  />
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    <Typography gutterBottom variant="h5" component="h2">
+                      {product.name}
+                    </Typography>
+                    <Typography>
+                      {product.description}
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
+                    <Button size="small">View</Button>
+                  </CardActions>
+                </CardActionArea>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
       </Container>
     </React.Fragment>
   );
