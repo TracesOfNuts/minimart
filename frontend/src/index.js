@@ -1,11 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import './index.css';
 import AdminLandingPage from './AdminLandingPage';
 import AdminProductPage from './AdminProductPage';
 
 const router = createBrowserRouter([
+  {
+    path: '/*',
+    element: <Navigate to="/admin/products" replace />,
+  },
   {
     path: '/admin/products',
     element: <AdminLandingPage />,
