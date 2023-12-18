@@ -72,9 +72,6 @@ function App() {
                     </Typography>
                   </CardContent>
                 </CardActionArea>
-                <CardActions>
-                  <Button size="small">View</Button>
-                </CardActions>
               </Card>
             </Grid>
           ))}
