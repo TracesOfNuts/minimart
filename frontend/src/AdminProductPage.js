@@ -1,24 +1,38 @@
 import * as React from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
     Button,
     Card,
     CardActions,
     CardContent,
+    CardMedia,
     Container,
     CssBaseline,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
     TextField,
     Typography,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import AppAppBar from "./components/AppAppBar";
 
 function AdminProductPage() {
+    // props
+    const { id } = useParams();
+    const navigate = useNavigate();
+
+    // states
+    const [product, setProduct] = React.useState(null);
     const [editedDescription, setEditedDescription] = React.useState("");
     const [editedPrice, setEditedPrice] = React.useState("");
     const [descriptionError, setDescriptionError] = React.useState(false);
     const [priceError, setPriceError] = React.useState(false);
-    const [product, setProduct] = React.useState(null);
-    const { id } = useParams();
+    const [isDeleting, setIsDeleting] = React.useState(false);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
+    
 
     React.useEffect(() => {
         fetchProduct();
@@ -91,48 +105,109 @@ function AdminProductPage() {
         }
     };
 
+    const openDeleteDialog = () => {
+        setIsDeleteDialogOpen(true);
+    };
+
+    const closeDeleteDialog = () => {
+        setIsDeleteDialogOpen(false);
+    };
+
+    const confirmDeleteProduct = async () => {
+        try {
+            setIsDeleting(true);
+            const response = await fetch(
+                `http://127.0.0.1:8000/api/products/${id}/`,
+                {
+                    method: "DELETE",
+                }
+            );
+            if (response.ok) {
+                console.log("Product deleted successfully!");
+            } else {    
+                console.error("Error deleting product:", response.status);
+            }
+        } catch (error) {
+            console.error("Error deleting product:", error);
+        } finally {
+            setIsDeleting(false);
+            closeDeleteDialog();
+            navigate("/admin/products/");
+        }
+    };
+
     return (
         <React.Fragment>
             <CssBaseline />
             <Container maxWidth="lg">
                 <AppAppBar title="Welcome to Jack's Minimart" />
-                <Typography variant="h2" sx={{mt:10}}>
-                    Admin Product Page
-                </Typography>
-                {product ? (
-                    <Card>
-                        <CardContent>
-                            <Typography
-                                variant="h5"
+                <Container sx={{mt:10}}>
+                    {product ? (
+                        <>
+                        <Card elevation={3}>
+                            <CardMedia
                                 component="div"
-                                gutterBottom
-                            >
-                                {product.name}
-                            </Typography>
-                            <TextField
-                                label="Description" 
-                                value={editedDescription}
-                                onChange={handleDescriptionChange}
-                                error={descriptionError}
-                                helperText={descriptionError && "Description is required"}
+                                sx={{
+                                // 16:9
+                                pt: "56.25%",
+                                }}
+                                image='https://source.unsplash.com/random?random?fruit,vegetable'
                             />
-                            <TextField
-                                label="Price" 
-                                value={editedPrice}
-                                onChange={handlePriceChange}
-                                error={priceError}
-                                helperText={priceError && "Price must be a number"}
-                            />
-                        </CardContent>
-                        <CardActions>
-                            <Button variant="contained" onClick={saveChanges}>
-                                Save Changes
-                            </Button>
-                        </CardActions>
-                    </Card>
-                ) : (
-                    <Typography variant="body1">Product Not Found</Typography>
-                )}
+                            <CardContent>
+                                <Typography
+                                    variant="h5"
+                                    component="div"
+                                    gutterBottom
+                                >
+                                    {product.name}
+                                </Typography>
+                                <TextField
+                                    label="Description" 
+                                    value={editedDescription}
+                                    onChange={handleDescriptionChange}
+                                    error={descriptionError}
+                                    helperText={descriptionError && "Description is required"}
+                                />
+                                <TextField
+                                    label="Price" 
+                                    value={editedPrice}
+                                    onChange={handlePriceChange}
+                                    error={priceError}
+                                    helperText={priceError && "Price must be a number"}
+                                />
+                            </CardContent>
+                            <CardActions>
+                                <Button variant="contained" onClick={saveChanges}>
+                                    Save Changes
+                                </Button>
+                                <IconButton 
+                                    aria-label="delete" 
+                                    onClick={openDeleteDialog} 
+                                    disabled={isDeleting}
+                                    variant="outlined"   
+                                >
+                                    <DeleteIcon />
+                                </IconButton>
+                            </CardActions>
+                        </Card>
+                        <Dialog open={isDeleteDialogOpen} onClose={closeDeleteDialog}>
+                            <DialogTitle>Confirm Delete</DialogTitle>
+                            <DialogContent>
+                                <Typography>
+                                    Are you sure you want to delete this product?
+                                </Typography>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={closeDeleteDialog}>Cancel</Button>
+                                <Button onClick={confirmDeleteProduct} disabled={isDeleting}>Delete</Button>    
+                            </DialogActions>
+                        </Dialog>
+                        </>
+                    ) : (
+                        <Typography variant="body1">Product Not Found</Typography>
+                    )}
+                    
+                </Container>
             </Container>
         </React.Fragment>
     );
