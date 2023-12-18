@@ -22,12 +22,13 @@ function AdminProductPage() {
 
     React.useEffect(() => {
         fetchProduct();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const fetchProduct = async () => {
         try {
             const response = await fetch(
-                `http://127.0.0.1:8000/api/products/${id}`
+                `http://127.0.0.1:8000/api/products/${id}/`
             );
             if (response.ok) {
                 const product = await response.json();
