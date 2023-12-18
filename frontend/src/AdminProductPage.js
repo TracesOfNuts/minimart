@@ -12,11 +12,11 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    IconButton,
     TextField,
     Typography,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import SaveIcon from "@mui/icons-material/Save";
 import AppAppBar from "./components/AppAppBar";
 
 function AdminProductPage() {
@@ -177,17 +177,19 @@ function AdminProductPage() {
                                 />
                             </CardContent>
                             <CardActions>
-                                <Button variant="contained" onClick={saveChanges}>
+                                <Button variant="contained" onClick={saveChanges} endIcon={<SaveIcon />}>
                                     Save Changes
                                 </Button>
-                                <IconButton 
+                                <Button
                                     aria-label="delete" 
                                     onClick={openDeleteDialog} 
                                     disabled={isDeleting}
-                                    variant="outlined"   
+                                    variant="outlined"
+                                    endIcon={<DeleteIcon />}
+                                    color="error"
                                 >
-                                    <DeleteIcon />
-                                </IconButton>
+                                    delete
+                                </Button>
                             </CardActions>
                         </Card>
                         <Dialog open={isDeleteDialogOpen} onClose={closeDeleteDialog}>

@@ -17,6 +17,7 @@ import {
   TextField,
   Typography 
 } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
 
 import AppAppBar from "./components/AppAppBar";
 import banner from './banner.jpg';
@@ -96,7 +97,7 @@ function AdminLandingPage() {
           }}
         >
         </Paper>
-        <Button variant="contained" onClick={handleOpen} sx={{mb:4}}>
+        <Button variant="contained" onClick={handleOpen} sx={{mb:4}} startIcon={<AddIcon />}>
           Add Product
         </Button>
         <Grid container spacing={4}>
