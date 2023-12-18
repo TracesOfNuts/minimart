@@ -71,10 +71,10 @@ function App() {
                       {product.description}
                     </Typography>
                   </CardContent>
-                  <CardActions>
-                    <Button size="small">View</Button>
-                  </CardActions>
                 </CardActionArea>
+                <CardActions>
+                  <Button size="small">View</Button>
+                </CardActions>
               </Card>
             </Grid>
           ))}
