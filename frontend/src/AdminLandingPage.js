@@ -17,7 +17,6 @@ import {
   TextField,
   Typography 
 } from "@mui/material";
-import { Unstable_NumberInput as NumberInput } from '@mui/base/Unstable_NumberInput';
 
 import AppAppBar from "./components/AppAppBar";
 import banner from './banner.jpg';
