@@ -10,13 +10,10 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /app/backend
 
 # Install dependencies
-COPY ./requirements.txt /app/backend/
+COPY ./requirements.txt /app/backend
 RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev && \
     pip install --no-cache-dir -r requirements.txt && \
     apk --purge del .build-deps
 
 # Copy project
 COPY . /app/backend/
-
-# Run the app
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

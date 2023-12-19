@@ -1,6 +1,30 @@
 version: '3.8'
 
+# Settings and configurations that are common for all containers
+x-minio-common: &minio-common
+  image: quay.io/minio/minio
+  command: server --console-address ":9001" /minio/data
+  ports:
+    - "9000:9000"
+    - "9001:9001"
+  environment:
+    MINIO_ROOT_USER: minioadmin
+    MINIO_ROOT_PASSWORD: minioadmin
+  healthcheck:
+    test: ["CMD", "mc", "ready", "local"]
+    interval: 5s
+    timeout: 5s
+    retries: 5
+
 services:
+
+  minio:
+    <<: *minio-common
+    container_name: minio
+    hostname: minio
+    volumes:
+      - minio_data:/data
+
   db:
     image: postgres:16-alpine
     restart: always
@@ -13,12 +37,20 @@ services:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   backend:
     container_name: backend
     build:
       context: ./backend
       dockerfile: Dockerfile
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
     environment:
       POSTGRES_DB: postgres
       POSTGRES_USER: postgres
@@ -28,7 +60,10 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
   
   frontend:
     container_name: frontend
@@ -41,18 +76,7 @@ services:
       - "3000:3000"
     depends_on:
       - backend
-
-  minio:
-    container_name: minio
-    image: minio/minio:latest
-    environment:
-      MINIO_ACCESS_KEY: minioadmin
-      MINIO_SECRET_KEY: minioadmin
-    volumes:
-      - minio_data:/data
-    ports:
-      - "9000:9000"
-
+  
 volumes:
   postgres_data:
     driver: local
