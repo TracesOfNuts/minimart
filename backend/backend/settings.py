@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     # Third-party
     'corsheaders',
     'rest_framework',
+    'storages',
 
     # Local
     'products',
@@ -136,3 +137,12 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# S3 settings
+AWS_ACCESS_KEY_ID = 'MINIO_ACCESS_KEY'
+AWS_SECRET_ACCESS_KEY = 'MINIO_ACCESS_KEY'
+AWS_STORAGE_BUCKET_NAME = 'images'
+AWS_S3_ENDPOINT_URL = 'http://localhost:9000'
+AWS_DEFAULT_ACL = None
+AWS_QUERYSTRING_AUTH = True
+AWS_S3_FILE_OVERWRITE = False

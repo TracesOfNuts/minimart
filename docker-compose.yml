@@ -25,6 +25,18 @@ services:
     volumes:
       - minio_data:/data
 
+  createbuckets:
+    image: minio/mc
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc config host add myminio http://localhost:9000 minioadmin minioadmin;
+      /usr/bin/mc mb images;
+      /usr/bin/mc policy set none images;"
   db:
     image: postgres:16-alpine
     restart: always
@@ -65,17 +77,17 @@ services:
       minio:
         condition: service_healthy
   
-  frontend:
-    container_name: frontend
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    volumes:
-      - ./frontend:/app/frontend
-    ports:
-      - "3000:3000"
-    depends_on:
-      - backend
+  # frontend:
+  #   container_name: frontend
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - ./frontend:/app/frontend
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - backend
   
 volumes:
   postgres_data:
