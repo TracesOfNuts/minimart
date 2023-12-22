@@ -1,97 +1,100 @@
 version: '3.8'
 
-# Settings and configurations that are common for all containers
-x-minio-common: &minio-common
-  image: quay.io/minio/minio
-  command: server --console-address ":9001" /minio/data
-  ports:
-    - "9000:9000"
-    - "9001:9001"
-  environment:
-    MINIO_ROOT_USER: minioadmin
-    MINIO_ROOT_PASSWORD: minioadmin
-  healthcheck:
-    test: ["CMD", "mc", "ready", "local"]
-    interval: 5s
-    timeout: 5s
-    retries: 5
-
 services:
 
-  minio:
-    <<: *minio-common
-    container_name: minio
-    hostname: minio
+  minio-server:
+    image: quay.io/minio/minio
+    container_name: minio-server
+    ports:
+    - "9000:9000"
+    - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     volumes:
       - minio_data:/data
+    command: server --console-address ":9001" /data
+    
 
-  createbuckets:
+  minio-client:
     image: minio/mc
     container_name: minio-client
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
     depends_on:
-      - minio
+      - minio-server
+    volumes:
+      - ./images:/images
     entrypoint: >
       /bin/sh -c "
-      /usr/bin/mc config host add myminio http://localhost:9000 minioadmin minioadmin;
-      /usr/bin/mc mb images;
-      /usr/bin/mc policy set none images;"
-  db:
-    image: postgres:16-alpine
-    restart: always
-    container_name: postgres
-    environment:
-      POSTGRES_DB: products
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
-  backend:
-    container_name: backend
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    command: >
-      sh -c "python manage.py migrate &&
-             python manage.py runserver 0.0.0.0:8000"
-    environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres 
-    volumes:
-      - ./backend:/app/backend
-    ports:
-      - "8000:8000"
-    depends_on:
-      db:
-        condition: service_healthy
-      minio:
-        condition: service_healthy
+      until (/usr/bin/mc config host add myminio http://minio-server:9000 minioadmin minioadmin) do echo '...waiting...' && sleep 1; done;
+      /usr/bin/mc mb myminio/images;
+      /usr/bin/mc policy set none myminio/images;
+      cd /images;
+      /usr/bin/mc cp -r /images/* myminio/images/ --debug;
+      exit 0;
+      "
   
-  frontend:
-    container_name: frontend
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    volumes:
-      - ./frontend:/app/frontend
-    ports:
-      - "3000:3000"
-    depends_on:
-      - backend
+  # db:
+  #   image: postgres:16-alpine
+  #   restart: always
+  #   container_name: postgres
+  #   environment:
+  #     POSTGRES_DB: products
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: postgres
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   ports:
+  #     - "5432:5432"
+  #   healthcheck:
+  #     test: ["CMD", "pg_isready", "-U", "postgres"]
+  #     interval: 5s
+  #     timeout: 5s
+  #     retries: 5
+
+  # backend:
+  #   container_name: backend
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   command: >
+  #     sh -c "python manage.py migrate &&
+  #            python manage.py runserver 0.0.0.0:8000"
+  #   environment:
+  #     POSTGRES_DB: postgres
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: postgres 
+  #   volumes:
+  #     - ./backend:/app/backend
+  #   ports:
+  #     - "8000:8000"
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #     minio-server:
+  #       condition: service_healthy
+  
+  # frontend:
+  #   container_name: frontend
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - ./frontend:/app/frontend
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+      # - backend
   
 volumes:
-  postgres_data:
-    driver: local
+  # postgres_data:
+  #   driver: local
   minio_data:
     driver: local
