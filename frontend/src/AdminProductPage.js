@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
+    Box,
     Button,
     Card,
     CardActions,
@@ -146,10 +147,10 @@ function AdminProductPage() {
                         <>
                         <Card elevation={3}>
                             <CardMedia
-                                component="div"
+                                component="img"
                                 sx={{
-                                // 16:9
-                                pt: "56.25%",
+                                height:'300px',
+                                objectFit:'contain',
                                 }}
                                 image={product.image}
                             />
@@ -167,7 +168,9 @@ function AdminProductPage() {
                                     onChange={handleDescriptionChange}
                                     error={descriptionError}
                                     helperText={descriptionError && "Description is required"}
+                                    fullWidth
                                 />
+                                <Box mt={2} />
                                 <TextField
                                     label="Price" 
                                     value={editedPrice}
