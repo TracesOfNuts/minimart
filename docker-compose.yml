@@ -19,7 +19,6 @@ services:
     volumes:
       - minio_data:/data
     command: server --console-address ":9001" /data
-    
 
   minio-client:
     image: minio/mc
@@ -98,4 +97,4 @@ volumes:
   postgres_data:
     driver: local
   minio_data:
-    driver: local
+    driver: bridge
