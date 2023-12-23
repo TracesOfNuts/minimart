@@ -100,7 +100,7 @@ function AdminLandingPage() {
         <Button variant="contained" onClick={handleOpen} sx={{mb:4}} startIcon={<AddIcon />}>
           Add Product
         </Button>
-        <Grid container spacing={4}>
+        <Grid container spacing={4} pb={4}>
           {products.map((product) => (
             <Grid item key={product.id} xs={12} sm={6} md={4}>
               <Card elevation={3} sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
