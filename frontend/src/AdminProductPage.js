@@ -79,20 +79,17 @@ function AdminProductPage() {
             return;
         }
         try {
+            const formData = new FormData();
+            formData.append('id', product.id);
+            formData.append('name', product.name);
+            formData.append('description', editedDescription);
+            formData.append('price', editedPrice);
+            formData.append('image', product.image);
             const response = await fetch(
                 `http://127.0.0.1:8000/api/products/${id}/`,
                 {
                     method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        id: product.id,
-                        name: product.name,
-                        description: editedDescription,
-                        price: editedPrice,
-                        image: null
-                    }),
+                    body: formData
                 }
             );
             if (response.ok) {
