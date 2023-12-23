@@ -30,6 +30,7 @@ function AdminLandingPage() {
     description: "",
     price: 0
   });
+  const [newProductImage, setNewProductImage] = React.useState(null);
 
   const handleOpen = () => {
     setOpen(true);
@@ -47,14 +48,20 @@ function AdminLandingPage() {
     }));
   };
 
+  const handleImageChange = (event) => {
+    setNewProductImage(event.target.files[0]);
+  };
+
   const handleAddProduct = async () => {
     try {
+      const formData = new FormData();
+      formData.append('name', newProduct.name);
+      formData.append('description', newProduct.description);
+      formData.append('price', newProduct.price);
+      formData.append('image', newProductImage);
       const response = await fetch("http://127.0.0.1:8000/api/products/", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(newProduct)
+        body: formData
       });
       const createdProduct = await response.json();
       setProducts((prevProducts) => [...prevProducts, createdProduct]);
@@ -161,6 +168,17 @@ function AdminLandingPage() {
               name="price"
               value={newProduct.price}
               onChange={handleInputChange}
+            />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="dialog_product_image"
+              label="Product Image"
+              InputLabelProps={{shrink: true}}
+              type="file"
+              fullWidth
+              variant="standard"
+              onChange={handleImageChange}
             />
           </DialogContent>
           <DialogActions>
