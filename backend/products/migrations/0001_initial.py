@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=255)),
                 ('price', models.DecimalField(decimal_places=2, max_digits=5)),
                 ('description', models.TextField()),
-                ('image', models.ImageField(blank=True, null=True, upload_to='product_images/')),
+                ('image', models.ImageField(blank=True, null=True))
             ],
         ),
     ]
