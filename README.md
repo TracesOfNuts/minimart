@@ -5,6 +5,7 @@
 A simple web application for an online store.
 
 The web application consists of 2 pages:
+
 1. Admin Landing Page
    - displays all the products in the minimart.
    - a form to add a new product.
@@ -25,6 +26,7 @@ The web application consists of 2 pages:
 - Storage
   - [PostgreSQL](https://www.postgresql.org/) - Relational DB for storing product information
   - [MinIO](https://min.io/)  - S3-compatible object storage for storing product images
+  - [MinIO Client](https://docs.min.io/docs/minio-client-quickstart-guide.html) - CLI for interacting with MinIO
 - Containerization
   - [Docker](https://www.docker.com/) - Containerization platform
 
