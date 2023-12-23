@@ -16,3 +16,9 @@ class ProductSerializer(serializers.ModelSerializer):
         instance.image = validated_data.get('image', instance.image)
         instance.save()
         return instance
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        if representation['image']:
+            representation['image'] = representation['image'].replace('minio-server', 'localhost')
+        return representation
