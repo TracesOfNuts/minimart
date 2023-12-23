@@ -84,7 +84,6 @@ function AdminProductPage() {
             formData.append('name', product.name);
             formData.append('description', editedDescription);
             formData.append('price', editedPrice);
-            formData.append('image', product.image);
             const response = await fetch(
                 `http://127.0.0.1:8000/api/products/${id}/`,
                 {
@@ -100,6 +99,8 @@ function AdminProductPage() {
             }
         } catch (error) {
             console.error("Error updating product:", error);
+        } finally {
+            navigate("/admin/products/");
         }
     };
 
