@@ -35,9 +35,10 @@ services:
       /bin/sh -c "
       until (/usr/bin/mc config host add myminio http://minio-server:9000 minioadmin minioadmin) do echo '...waiting...' && sleep 1; done;
       /usr/bin/mc mb myminio/images;
-      /usr/bin/mc policy set none myminio/images;
-      cd /images;
-      /usr/bin/mc cp -r /images/* myminio/images/ --debug;
+      /usr/bin/mc anonymous set none myminio/images;
+      /usr/bin/mc admin user add myminio MINIO_ACCESS_KEY MINIO_SECRET_KEY;
+      /usr/bin/mc admin policy attach myminio consoleAdmin --user=MINIO_ACCESS_KEY;
+      # /usr/bin/mc cp -r /images/* myminio/images/;
       exit 0;
       "
   
@@ -81,17 +82,17 @@ services:
       minio-server:
         condition: service_healthy
   
-  frontend:
-    container_name: frontend
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    volumes:
-      - ./frontend:/app/frontend
-    ports:
-      - "3000:3000"
-    depends_on:
-      - backend
+  # frontend:
+  #   container_name: frontend
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - ./frontend:/app/frontend
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - backend
   
 volumes:
   postgres_data:
