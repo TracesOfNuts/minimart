@@ -138,11 +138,17 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# S3 settings
+# Media files (Images)
+MEDIA_URL = 'media/'
+
+# django-storages settings
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
 AWS_ACCESS_KEY_ID = 'MINIO_ACCESS_KEY'
-AWS_SECRET_ACCESS_KEY = 'MINIO_ACCESS_KEY'
+AWS_SECRET_ACCESS_KEY = 'MINIO_SECRET_KEY'
 AWS_STORAGE_BUCKET_NAME = 'images'
-AWS_S3_ENDPOINT_URL = 'http://localhost:9000'
+AWS_S3_ENDPOINT_URL = 'http://minio-server:9000'
 AWS_DEFAULT_ACL = None
-AWS_QUERYSTRING_AUTH = True
 AWS_S3_FILE_OVERWRITE = False
+AWS_QUERYSTRING_AUTH = True
+AWS_QUERYSTRING_EXPIRE = 60 * 60 * 24 * 365 * 10    # 10 years
