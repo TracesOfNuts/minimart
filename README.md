@@ -4,15 +4,30 @@
 
 A simple web application for an online store.
 
-The web application consists of 2 pages:
+The web application consists of 2 pages which support CRUD functionalities:
 
 1. Admin Landing Page
-   - displays all the products in the minimart.
-   - a form to add a new product.
+   - displays all the products in the minimart (READ).
+
+     <img src="https://github.com/TracesOfNuts/minimart/assets/24549125/aad6604e-be09-431a-9d0d-b04aefa54858" width="600">
+     
+   - a form to add a new product (CREATE).
+     
+     <img src="https://github.com/TracesOfNuts/minimart/assets/24549125/b3a04fe1-7aba-4825-ab5a-7ddfe2d99499" width="600">
+  
+     After adding new product:
+     
+     <img src="https://github.com/TracesOfNuts/minimart/assets/24549125/6a8746ca-a8e5-44bd-a3ec-b12d285d61b4" width="600">
+
+
 2. Admin Product Page
-    - displays the details of a product.
-    - a form to edit the product's description and price.
-    - a button to delete the product.
+    - a form to edit the product's description and price (UPDATE).
+      
+    <img src="https://github.com/TracesOfNuts/minimart/assets/24549125/85ecfb2e-cc03-4894-b087-e6072844a261" width="600">
+
+    - a button to delete the product (DELETE).
+  
+    <img src="https://github.com/TracesOfNuts/minimart/assets/24549125/fc9a5bd8-88a6-4463-803c-454bef7811c0" width="600">
 
 ## Technologies
 
@@ -39,7 +54,7 @@ The web application consists of 2 pages:
 
 1. Clone the repository.
 2. Run `docker-compose up --build` to start the application.
-3. Navigate to `http://localhost:3000` to view the web application.
+3. Navigate to `http://localhost:3000/admin/products` to view the web application.
 
 ## Contact
 
